@@ -15,9 +15,9 @@ datasource db {
 
 model User {
   id Int @id @default(autoincrement())
-  nickname String
-  email String
-  password String
+  nickname String?
+  email String @unique
+  password String @db.VarChar(255)
   createdAt DateTime @default(now())
   post Post[]
   likes Like[]
