@@ -4,11 +4,10 @@ import { StatusCodes } from 'http-status-codes';
 import { prisma } from '../db/db';
 import jwt from '../utils/jwt';
 import { UserInput } from "types";
-
+import { validateUserSchema } from "../schemas/zod";
 class AuthController {
   async signin(req: Request, res: Response, next: NextFunction) {
     const { email, password }:UserInput = req.body;
-
     if (!email || !password) {
       return next({
         status: StatusCodes.BAD_REQUEST,
@@ -42,20 +41,23 @@ class AuthController {
   async signup(req: Request, res: Response, next: NextFunction) {
     const { email, password, nickname } = req.body;
     const uniqueUser = await prisma.user.findUnique({ where: { email } });
-
+    const validate = validateUserSchema(req.body);
     if (!uniqueUser){
       return next({
         status: StatusCodes.BAD_REQUEST,
         message: 'User already exists',
       })
     }
-
-    if(!email || !password || !nickname){
+  
+    if(!validate){
       return next({
         status: StatusCodes.BAD_REQUEST,
         message: 'Some required fields are missing',
       })
     }
+
+    const token = jwt.sign({ id: uniqueUser.id, email: uniqueUser.email})
+    res.status(StatusCodes.OK).json({ token });
   }
 }
 
