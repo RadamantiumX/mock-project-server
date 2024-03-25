@@ -13,7 +13,7 @@ class UserController {
     if (!user)
       return next({ status: StatusCodes.NOT_FOUND, message: 'User not found' });
 
-    res.status(StatusCodes.OK).json({ name: user.name, email: user.email });
+    res.status(StatusCodes.OK).json({ name: user.nickname, email: user.email });
   }
 }
 
