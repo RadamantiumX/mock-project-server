@@ -1,12 +1,13 @@
-import bcrypt from 'bcryptjs';
+import bcrypt from "bcryptjs";
 import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { prisma } from '../db/db';
 import jwt from '../utils/jwt';
+import { UserInput } from "types";
 
 class AuthController {
-  async authenticate(req: Request, res: Response, next: NextFunction) {
-    const { email, password } = req.body;
+  async signin(req: Request, res: Response, next: NextFunction) {
+    const { email, password }:UserInput = req.body;
 
     if (!email || !password) {
       return next({
@@ -29,13 +30,32 @@ class AuthController {
     if (!isValidPassword) {
       return next({
         status: StatusCodes.UNAUTHORIZED,
-        message: 'Invalid password',
+        message: 'Invalid password or email provided',
       });
     }
 
     const token = jwt.sign({ id: user.id, email: user.email });
 
     res.status(StatusCodes.OK).json({ token });
+  }
+
+  async signup(req: Request, res: Response, next: NextFunction) {
+    const { email, password, nickname } = req.body;
+    const uniqueUser = await prisma.user.findUnique({ where: { email } });
+
+    if (!uniqueUser){
+      return next({
+        status: StatusCodes.BAD_REQUEST,
+        message: 'User already exists',
+      })
+    }
+
+    if(!email || !password || !nickname){
+      return next({
+        status: StatusCodes.BAD_REQUEST,
+        message: 'Some required fields are missing',
+      })
+    }
   }
 }
 
