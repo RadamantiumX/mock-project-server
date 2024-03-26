@@ -3,11 +3,11 @@ import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { prisma } from '../db/db';
 import jwt from '../utils/jwt';
-import { UserInput } from "types";
+import { AuthInput } from "types";
 import { validateUserSchema } from "../schemas/zod";
 class AuthController {
   async signin(req: Request, res: Response, next: NextFunction) {
-    const { email, password }:UserInput = req.body;
+    const { email, password }:AuthInput = req.body;
     if (!email || !password) {
       return next({
         status: StatusCodes.BAD_REQUEST,
@@ -39,7 +39,7 @@ class AuthController {
   }
 
   async signup(req: Request, res: Response, next: NextFunction) {
-    const { email, password, nickname } = req.body;
+    const { email, password, nickname }:AuthInput = req.body;
     const uniqueUser = await prisma.user.findUnique({ where: { email } });
     const validate = validateUserSchema(req.body);
     if (!uniqueUser){
@@ -56,7 +56,11 @@ class AuthController {
       })
     }
 
-    const token = jwt.sign({ id: uniqueUser.id, email: uniqueUser.email})
+    const fixedEmail = email.toLowerCase();
+    const hashedPassword = await bcrypt.hash(password, 10)
+
+    const newUser = await prisma.user.create({ data:{ nickname: nickname, email: fixedEmail,  password: hashedPassword }  })
+    const token = jwt.sign({ id: newUser.id, email: newUser.email})
     res.status(StatusCodes.OK).json({ token });
   }
 }
