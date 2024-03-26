@@ -20,6 +20,7 @@ model User {
   password String @db.VarChar(255)
   createdAt DateTime @default(now())
   post Post[]
+  responses ResponsePost[]
   likes Like[]
   dislikes Dislike[]
 }
@@ -31,6 +32,17 @@ model Post {
   authorId Int 
   createdAt DateTime @default(now())
   videoId String
+  responses ResponsePost[]
+}
+
+model ResponsePost {
+  id Int @id @default(autoincrement()) 
+  content String
+  author User @relation(fields: [authorId], references: [id])
+  authorId Int
+  createdAt DateTime @default(now())
+  postedBy Post @relation(fields: [postId], references: [id])
+  postId Int
 }
 
 model Like {
