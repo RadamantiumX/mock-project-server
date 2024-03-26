@@ -1,5 +1,6 @@
 import z from 'zod'
-import { UserInput } from 'types'
+import { AuthInput } from 'types'
+import { PostInput } from 'types'
 
 const userSchema = z.object({
     nickname: z.string({
@@ -11,6 +12,19 @@ const userSchema = z.object({
     
 })
 
-export function validateUserSchema(input: UserInput){
+const postSchema = z.object({
+    content: z.string({
+        required_error: 'Empty content'
+    }).max(255),
+    authorId: z.number(),
+    videoId: z.string(),
+    postId: z.number(),
+})
+
+export function validateUserSchema(input: AuthInput){
+    return userSchema.safeParse(input)
+}
+
+export function validatePostSchema(input: PostInput){
     return userSchema.safeParse(input)
 }
