@@ -56,12 +56,18 @@ class AuthController {
       })
     }
 
-    const fixedEmail = email.toLowerCase();
+    //const fixedEmail = email.toLowerCase();
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    const newUser = await prisma.user.create({ data:{ nickname: nickname, email: fixedEmail,  password: hashedPassword }  })
-    const token = jwt.sign({ id: newUser.id, email: newUser.email})
-    res.status(StatusCodes.OK).json({ token });
+    const payload = {
+      nickname: nickname,
+      email: email,
+      password: hashedPassword
+    }
+
+    const newUser = await prisma.user.create({ data: payload  })
+    //const token = jwt.sign({ id: newUser.id, email: newUser.email})
+    res.status(StatusCodes.OK).json({ message: "User register successfully" });
   }
 }
 
