@@ -16,3 +16,8 @@ export interface ResponsePostInput{
     videoId: string;
     postId: number;
 }
+
+export interface IPayload {
+    id: number
+    email: string
+}

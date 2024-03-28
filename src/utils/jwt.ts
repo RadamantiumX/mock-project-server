@@ -1,12 +1,9 @@
 import 'dotenv/config'
 import jwt from 'jsonwebtoken'
+import { IPayload } from 'types'
 
 const SECRET = process.env.JWT_SECRET || 'secret'
 
-interface IPayload {
-    id: number
-    email: string
-}
 
 export default {
     sign: (payload: IPayload) => 
