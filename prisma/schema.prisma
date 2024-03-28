@@ -15,7 +15,7 @@ datasource db {
 
 model User {
   id Int @id @default(autoincrement())
-  nickname String?
+  nickname String
   email String @unique
   password String @db.VarChar(255)
   createdAt DateTime @default(now())
