@@ -41,7 +41,7 @@ class AuthController {
   async signup(req: Request, res: Response, next: NextFunction) {
     const { email, password, nickname }:AuthInput = req.body;
     const uniqueUser = await prisma.user.findUnique({ where: { email } });
-    const validate = validateUserSchema(req.body);
+    //const validate = validateUserSchema(req.body);
     if (!uniqueUser){
       return next({
         status: StatusCodes.BAD_REQUEST,
@@ -49,20 +49,20 @@ class AuthController {
       })
     }
   
-    if(!validate){
+    /*if(!validate){
       return next({
         status: StatusCodes.BAD_REQUEST,
         message: 'Some required fields are missing',
       })
-    }
+    }*/
 
     //const fixedEmail = email.toLowerCase();
-    const hashedPassword = await bcrypt.hash(password, 10)
+    const hashedPassword = bcrypt.hashSync(password, 8)
 
     const payload = {
-      nickname: nickname,
-      email: email,
-      password: hashedPassword
+      nickname: nickname.toString(),
+      email: email.toString(),
+      password: hashedPassword.toString()
     }
 
     const newUser = await prisma.user.create({ data: payload  })

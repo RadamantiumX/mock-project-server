@@ -9,7 +9,7 @@ const userSchema = z.object({
         required_error: 'The nickname is required'
     }).min(5),
     email: z.string().email(),
-    password: z.string().min(8).max(30),
+    password: z.string().min(6).max(30),
     
 })
 const responsePostSchema = z.object({
