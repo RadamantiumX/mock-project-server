@@ -1,0 +1,23 @@
+type ResponsePost {
+  id: String
+  content: String
+  authorId: Int
+  postId: Int
+}
+
+type Query {
+  responsePost: ResponsePost
+  responsesPosts: [ResponsePost]
+}
+
+input ResponseInput {
+  content: String
+  authorId: String
+  postId: Int
+}
+
+type Mutation {
+  createPost(input: PostInput!): Post
+  updatePost(input: PostInput!): Post
+  deletePost(id: String!): Post
+}
