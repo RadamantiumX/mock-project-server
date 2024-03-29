@@ -41,31 +41,30 @@ class AuthController {
   async signup(req: Request, res: Response, next: NextFunction) {
     const { email, password, nickname }:AuthInput = req.body;
     const uniqueUser = await prisma.user.findUnique({ where: { email } });
-    //const validate = validateUserSchema(req.body);
-    if (!uniqueUser){
+    const validate = validateUserSchema(req.body);
+    if (uniqueUser){
       return next({
         status: StatusCodes.BAD_REQUEST,
-        message: 'User already exists',
+        message: 'User mail provided already exists',
       })
     }
   
-    /*if(!validate){
+    if(!validate.success){ // Result of validation with the "success" method
       return next({
         status: StatusCodes.BAD_REQUEST,
-        message: 'Some required fields are missing',
+        message: JSON.parse(validate.error.message)
       })
-    }*/
-
-    //const fixedEmail = email.toLowerCase();
-    const hashedPassword = bcrypt.hashSync(password, 8)
-
-    const payload = {
-      nickname: nickname.toString(),
-      email: email.toString(),
-      password: hashedPassword.toString()
     }
 
-    const newUser = await prisma.user.create({ data: payload  })
+    
+    const hashedPassword:any = bcrypt.hashSync(password, 10)
+
+
+    const newUser = await prisma.user.create({ data: {
+      nickname: nickname,
+      email: email,
+      password: hashedPassword
+    } })
     //const token = jwt.sign({ id: newUser.id, email: newUser.email})
     res.status(StatusCodes.OK).json({ message: "User register successfully" });
   }
