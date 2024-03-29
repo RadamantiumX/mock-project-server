@@ -17,7 +17,7 @@ model User {
   id Int @id @default(autoincrement())
   nickname String
   email String @unique
-  password String @db.VarChar(255)
+  password String 
   createdAt DateTime @default(now())
   post Post[]
   responses ResponsePost[]

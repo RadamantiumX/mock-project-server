@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "npx nodemon --exec ts-node src/api/app.ts",
+    "dev": "npx nodemon --exec ts-node src/api/server.ts",
     "build": "rm -rf ./build && tsc",
     "start": "node build/src/index.js"
   },
