@@ -19,12 +19,12 @@ export const getUser = async ({id, info}: GetUserArgs) => {
 
 export const createUser  = async ({nickname, email, password}:AuthInput) => {
     console.log({email,nickname})
-    const hashPassword:any = bcrypt.hash(password, 8)
+    const hashPassword:any = bcrypt.hashSync(password, 10)
     const createdUser = await prisma.user.create({
         data: {
             nickname: nickname,
             email: email,
-            password: JSON.stringify(hashPassword)
+            password: hashPassword
         }
     })
 
