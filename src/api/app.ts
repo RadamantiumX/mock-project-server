@@ -2,7 +2,7 @@ import express, {json, urlencoded} from 'express';
 import router from './routes';
 import errorMiddleware from "../middlewares/error"
 import dotenv from "dotenv"
-// import { corsMiddleware } from '../middlewares/cors';
+import { corsMiddleware } from '../middlewares/cors';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from "@apollo/server/express4"
 import { typeDefs, resolvers } from '../graphql';
@@ -12,13 +12,13 @@ import cors from 'cors'
 dotenv.config()
 const app = express();
 const PORT = process.env.PORT || 3000
-// app.use(corsMiddleware());
-// app.use(express.json()).use(router).use(errorMiddleware)
+app.use(corsMiddleware());
+app.use(express.json()).use(router).use(errorMiddleware)
 
 const bootstrapServer = async () => {
     const server = new ApolloServer({
         typeDefs,
-        resolvers
+        resolvers,
     })
 
     await server.start()
@@ -34,6 +34,6 @@ const bootstrapServer = async () => {
     })
 }
 
-bootstrapServer()
+// bootstrapServer()
 
-// export default app
+export default app
