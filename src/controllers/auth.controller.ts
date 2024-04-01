@@ -34,8 +34,13 @@ class AuthController {
     }
 
     const token = jwt.sign({ id: user.id, email: user.email });
+    const data = {
+      id: user.id,
+      nickname: user.nickname,
+      email: user.email
+    }
 
-    res.status(StatusCodes.OK).json({ token });
+    res.status(StatusCodes.OK).json({ token, data });
   }
 
   async signup(req: Request, res: Response, next: NextFunction) {
