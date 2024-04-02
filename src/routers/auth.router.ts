@@ -1,10 +1,11 @@
 import { Router } from 'express';
 import rescue from 'express-rescue';
 import AuthController from '../controllers/auth.controller';
+import { signin } from '../controllers/tets.controller';
 
 const authRouter = Router();
 
-authRouter.route('/signin').post(rescue(AuthController.signin));
+authRouter.post('/signin', AuthController.signin);
 authRouter.route('/signup').post(rescue(AuthController.signup));
 
 

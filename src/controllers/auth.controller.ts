@@ -7,6 +7,7 @@ import { AuthInput } from "types";
 import { validateUserSchema } from "../schemas/zod";
 class AuthController {
   async signin(req: Request, res: Response, next: NextFunction) {
+    
     const { email, password }:AuthInput = req.body;
     if (!email || !password) {
       return next({
@@ -23,6 +24,7 @@ class AuthController {
         message: 'User not found',
       });
     }
+    
 
     const isValidPassword = await bcrypt.compare(password, user.password);
 
@@ -32,16 +34,18 @@ class AuthController {
         message: 'Invalid password or email provided',
       });
     }
-
-    const token = jwt.sign({ id: user.id, email: user.email });
     const data = {
       id: user.id,
       nickname: user.nickname,
       email: user.email
     }
 
-    res.status(StatusCodes.OK).json({ token, data });
+    const token = jwt.sign({ id: user.id, email: user.email });
+    
+    res.status(StatusCodes.OK).json({ response:{token, data} });
   }
+
+
 
   async signup(req: Request, res: Response, next: NextFunction) {
     const { email, password, nickname }:AuthInput = req.body;

@@ -9,7 +9,7 @@ Content-Type: application/json
   "confirmPassword": "Seba2010!"
 }
 
-### Get User
+### Login
 
 POST  http://localhost:4000/auth/signin
 Content-Type: application/json
